@@ -1,8 +1,30 @@
+import os
+from flask import Flask
+from threading import Thread
 import telebot
 from telebot import types
 import time
 
-# Bilgileriniz
+# --- FLASK WEBSITESI & KEEP ALIVE KISMI ---
+app = Flask('')
+
+@app.route('/')
+def home():
+    return "Bot 7/24 Aktif!"
+
+def run():
+    port = int(os.environ.get("PORT", 8080))
+    app.run(host='0.0.0.0', port=port)
+
+def keep_alive():
+    t = Thread(target=run)
+    t.start()
+
+# Web sunucusunu başlat
+keep_alive()
+
+
+# --- BOT BİLGİLERİ VE AYARLARI ---
 TOKEN = "8998485712:AAH15ldE_wr-Q00GRNXw4IGO0rmDyVmAYbk"
 OWNER_ID = 7731769678
 BOT_USERNAME = "Gokokoruma_bot"  
@@ -27,7 +49,6 @@ def is_admin(message):
 def let_start(message):
     markup = types.InlineKeyboardMarkup(row_width=2)
     
-    # Hem Gruba hem Kanala ekleme butonları ayrı ayrı eklendi
     btn_add_group = types.InlineKeyboardButton("➕ Gruba Ekle", url=f"https://t.me/{BOT_USERNAME}?startgroup=true")
     btn_add_channel = types.InlineKeyboardButton("📢 Kanala Ekle", url=f"https://t.me/{BOT_USERNAME}?startchannel=true")
     
@@ -52,7 +73,6 @@ def let_start(message):
     btn_channel = types.InlineKeyboardButton("📢 Kanal ↗️", url="https://t.me/yago_frewl")
     btn_dev = types.InlineKeyboardButton("🧙‍♂️ Geliştirici ↗️", url="https://t.me/GOKO_R4")
     
-    # Buton Düzeni
     markup.add(btn_add_group, btn_add_channel)
     markup.add(btn_clone, btn_settings)
     markup.add(btn_welcome, btn_badwords)
@@ -343,4 +363,3 @@ def guard_system(message):
 
 print("Gökø Guard Master Sürüm Aktif...")
 bot.infinity_polling()
-                                          
